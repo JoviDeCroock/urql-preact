@@ -20,11 +20,12 @@ export const useImmediateState = <S extends {}>(init: S): [S, SetState<S>] => {
   const updateState: SetState<S> = useCallback(
     (action: SetStateAction<S>): void => {
       if (!isMounted.current) {
-        const newState =
+        Object.assign(
+          state,
           typeof action === 'function'
             ? (action as (arg: S) => S)(state)
-            : action;
-        Object.assign(state, newState);
+            : action,
+        );
       } else {
         setState(action);
       }
